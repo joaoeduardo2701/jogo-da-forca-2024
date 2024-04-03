@@ -13,10 +13,11 @@ class Program
 
         char chute = 'a';
 
-        Console.WriteLine(frutaAleatoria);
+        //Console.WriteLine(frutaAleatoria);
 
         char[] palavraForca = new char[frutaAleatoria.Length];
 
+        Console.WriteLine("Quantidade de letra: ");
         for (int i = 0; i < palavraForca.Length; i++)
         {
             palavraForca[i] = '_';
@@ -36,7 +37,7 @@ class Program
                 {
                     palavraForca[i] = chute;
 
-                }
+                } 
             }
 
             string palavraEncontrada = string.Join("", palavraForca);
@@ -49,12 +50,10 @@ class Program
                 break;
             }
 
-
-            
-
             Console.WriteLine(palavraForca);
             Console.WriteLine();
         }
+
         for (int i = 0; i  < frutaAleatoria.Length; i++)
         {
             if (palavraForca[i] == '_')
@@ -65,6 +64,9 @@ class Program
                 break;
             }
         }
+
+        Console.WriteLine("Digite qualquer tecla para encerrar o programa...");
+        Console.ReadKey();
     }
 
     private static void MostrarMenu()
