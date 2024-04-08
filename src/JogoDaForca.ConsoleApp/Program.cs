@@ -1,90 +1,83 @@
-﻿namespace JogoDaForca.ConsoleApp;
-
-class Program
+﻿namespace JogoDaForca.ConsoleApp
 {
-    static void Main(string[] args)
+    internal class Program
     {
-        MostrarMenu();
-
-        string[] frutas = new string[29] { "ABACATE", "ABACAXI", "ACEROLA", "AÇAÍ", "ARAÇA", "BACABA", "BACURI", "BANANA", "CAJA", "CAJU", "CARAMBOLA", "CUPUAÇU", "GRAVIOLA", "GOIABA", "JABUTICABA", "JENIPAPO", "MAÇA", "MANGABA", "MANGA", "MARACUJA", "MURICI", "PEQUI", "PITANGA", "PITAYA", "SAPOTI", "BERGAMOTA", "UMBU", "UVA", "UVAIA" };
-
-        Random r = new Random();
-        string frutaAleatoria = frutas[r.Next(frutas.Length)];
-
-        char chute = 'a';
-
-        //Console.WriteLine(frutaAleatoria);
-
-        char[] palavraForca = new char[frutaAleatoria.Length];
-
-        Console.WriteLine("Quantidade de letra: ");
-        for (int i = 0; i < palavraForca.Length; i++)
+        static void Main(string[] args)
         {
-            palavraForca[i] = '_';
-        }
+            // o jogo acaba quando quantidadeErros = 5;
+            int quantidadeErros = 0;
 
-        Console.WriteLine(palavraForca);
-        Console.WriteLine();
+            bool jogadorEnforcou = false;
+            bool jogadorAcertou = false;
 
-        for (int palavraTerminou = 1; palavraTerminou <= frutaAleatoria.Length; palavraTerminou++)
-        {
-            Console.Write($"Qual o seu {palavraTerminou}° chute: ");
-            chute = char.Parse(Console.ReadLine());
+            // escolher uma palavra aleatória
+            string palavraEscolhida = "MELANCIA";
 
-            for (int i = 0; i < frutaAleatoria.Length; i++)
+            char[] letrasEncontradas = new char[palavraEscolhida.Length];
+
+            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
             {
-                if (chute == frutaAleatoria[i])
+                letrasEncontradas[caractere] = '-';
+            }
+
+            do
+            {
+                string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
+                string tronco = quantidadeErros >= 2 ? "x" : " ";
+                string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
+                string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
+                string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
+                string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
+
+                Console.Clear();
+                Console.WriteLine(" ___________        ");
+                Console.WriteLine(" |/        |        ");
+                Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
+                Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
+                Console.WriteLine(" |        {0}       ", troncoBaixo);
+                Console.WriteLine(" |        {0}       ", pernas);
+                Console.WriteLine(" |                  ");
+                Console.WriteLine(" |                  ");
+                Console.WriteLine("_|____              ");
+
+                Console.WriteLine("\n" + string.Join("", letrasEncontradas));
+
+                // usuário irá chutar uma letra
+                Console.Write("Digite uma letra: ");
+                char chute = Console.ReadLine()[0];
+
+                // checa se a letra está na palavra
+                bool letraFoiEncontrada = false;
+
+                for (int i = 0; i < palavraEscolhida.Length; i++)
                 {
-                    palavraForca[i] = chute;
+                    char letraAtual = palavraEscolhida[i];
 
-                } 
-            }
+                    // preenche o espaço da letra na palavra tracejada
+                    if (chute == letraAtual)
+                    {
+                        letrasEncontradas[i] = letraAtual;
+                        letraFoiEncontrada = true;
+                    }
+                }
 
-            string palavraEncontrada = string.Join("", palavraForca);
+                if (letraFoiEncontrada == false)
+                    quantidadeErros++;
 
-            if (palavraEncontrada == frutaAleatoria)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Você acertou a palavra!");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                break;
-            }
+                string palavraEncontrada = string.Join("", letrasEncontradas);
 
-            Console.WriteLine(palavraForca);
-            Console.WriteLine();
+                jogadorAcertou = palavraEncontrada == palavraEscolhida;
+                jogadorEnforcou = quantidadeErros >= 5;
+
+                if (jogadorAcertou)
+                    Console.WriteLine("\nVocê acertou a palavra secreta, parabéns!");
+
+                else if (jogadorEnforcou)
+                    Console.WriteLine("\nQue azar! Tente novamente!");
+
+            } while (jogadorEnforcou == false && jogadorAcertou == false);
+
+            Console.ReadLine();
         }
-
-        for (int i = 0; i  < frutaAleatoria.Length; i++)
-        {
-            if (palavraForca[i] == '_')
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Enforcado!");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                break;
-            }
-        }
-
-        Console.WriteLine("Digite qualquer tecla para encerrar o programa...");
-        Console.ReadKey();
-    }
-
-    private static void MostrarMenu()
-    {
-        Console.WriteLine("-------------------------------------");
-        Console.WriteLine("----------- Jogo da Forca -----------");
-        Console.WriteLine("-------------------------------------");
-        Console.WriteLine();
-
-        Console.WriteLine(" ___________");
-        Console.WriteLine(" |/        |");
-        Console.WriteLine(" |");
-        Console.WriteLine(" |");
-        Console.WriteLine(" |");
-        Console.WriteLine(" |");
-        Console.WriteLine(" |");
-        Console.WriteLine(" |");
-        Console.WriteLine("_|____");
-        Console.WriteLine();
     }
 }
